@@ -22,67 +22,62 @@ else
    OSNAME="Linux"
 fi
 
-VERSION="57"
-ARCFILE="rcfiles.tar.gz"
-VERFILE="rcfiles.version"
-FILEHOST="http://wadny.com/misc/"
-
 ### Set up paths (only needed for broken Solaris systems) ###
 if [ "$OSNAME" == "SunOS" ]; then
-	export PATH="/usr/local/gnu/bin:/opt/csw/bin:/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/jdk/bin:/usr/java/bin:/usr/local/X11/bin:/opt/SUNWspro/bin:/usr/openwin/bin:/usr/ccs/bin:/usr/ucb:/usr/local/kde-3.2/bin"
-	export LD_LIBRARY_PATH="/usr/local/gnu/lib:$LD_LIBRARY_PATH" # Fix python
+   export PATH="/usr/local/gnu/bin:/opt/csw/bin:/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/jdk/bin:/usr/java/bin:/usr/local/X11/bin:/opt/SUNWspro/bin:/usr/openwin/bin:/usr/ccs/bin:/usr/ucb:/usr/local/kde-3.2/bin"
+   export LD_LIBRARY_PATH="/usr/local/gnu/lib:$LD_LIBRARY_PATH" # Fix python
 fi
 
 ### Set up aliases ###
 case "$OSNAME" in
-	"Linux" )
+   "Linux" )
    LSVER=`/bin/ls --version | head -n 1 | awk '{ print ($4<8.0?"0":"8") }'`
    if [ "$LSVER" -eq "8" ]; then
-	   alias ls="/bin/ls --color -shF --group-directories-first"
-   	alias ll="/bin/ls --color -lhF --group-directories-first"
+      alias ls="/bin/ls --color -shF --group-directories-first"
+      alias ll="/bin/ls --color -lhF --group-directories-first"
    else
-   	alias ls="/bin/ls --color -shF"
-	   alias ll="/bin/ls --color -lhF"
-	fi
-	alias less="less -M"
-	VERBOSEPS="ps xawf -eo pid,user,time,nice,tty,cgroup,args"
-	;;
+      alias ls="/bin/ls --color -shF"
+      alias ll="/bin/ls --color -lhF"
+   fi
+   alias less="less -M"
+   VERBOSEPS="ps xawf -eo pid,user,time,nice,tty,cgroup,args"
+   ;;
 
-	"SunOS" )
-	alias ls="/usr/local/gnu/bin/ls --color -shF"
-	alias ll="/usr/local/gnu/bin/ls --color -lhF"
-	alias less="less -M"
-	VERBOSEPS="ps -ef"
-	;;
+   "SunOS" )
+   alias ls="/usr/local/gnu/bin/ls --color -shF"
+   alias ll="/usr/local/gnu/bin/ls --color -lhF"
+   alias less="less -M"
+   VERBOSEPS="ps -ef"
+   ;;
 
-	"OSF1" )
-	alias ls="/usr/local/bin/cls --color -shF"
-	alias ll="/usr/local/bin/cls --color -lhF"
-	alias less="less -M"
-	VERBOSEPS="ps -Af"
-	;;
+   "OSF1" )
+   alias ls="/usr/local/bin/cls --color -shF"
+   alias ll="/usr/local/bin/cls --color -lhF"
+   alias less="less -M"
+   VERBOSEPS="ps -Af"
+   ;;
 
-	"CYGWIN_NT-5.1" )
-	alias ls="/usr/bin/ls --color -shF"
-	alias ll="/usr/bin/ls --color -lhF"
-	alias less="less -M"
-	VERBOSEPS="ps -af f"
-	;;
+   "CYGWIN_NT-5.1" )
+   alias ls="/usr/bin/ls --color -shF"
+   alias ll="/usr/bin/ls --color -lhF"
+   alias less="less -M"
+   VERBOSEPS="ps -af f"
+   ;;
 
-	"CYGWIN_NT-6.1-WOW64" )
-	alias ls="/usr/bin/ls --color -shF"
-	alias ll="/usr/bin/ls --color -lhF"
-	alias less="less -M"
-	VERBOSEPS="ps -alW"
-	;;
+   "CYGWIN_NT-6.1-WOW64" )
+   alias ls="/usr/bin/ls --color -shF"
+   alias ll="/usr/bin/ls --color -lhF"
+   alias less="less -M"
+   VERBOSEPS="ps -alW"
+   ;;
 esac
 
 # procps version 3 works differently than version 2
 ps --version 2> /dev/null | grep -q -e "procps version 3"
 if [ $? == 0 ]; then
-	alias pps="ps -Af f"
+   alias pps="ps -Af f"
 else
-	alias pps=$VERBOSEPS
+   alias pps=$VERBOSEPS
 fi
 
 alias zextract="tar zxvf"
@@ -91,21 +86,6 @@ alias more="less"
 alias psgrep="pps | grep"
 alias reload="source ~/.bashrc"
 alias stack="dirs -l"
-
-### Updating system ###
-if `which wget > /dev/null 2>&1`; then
-	GETARC="wget $FILEHOST$ARCFILE"
-	GETVER="wget -q $FILEHOST$VERFILE"
-else
-	GETARC="lynx -source $FILEHOST$ARCFILE > $ARCFILE"
-	GETVER="lynx -source $FILEHOST$VERFILE > $VERFILE"
-fi
-MYPSHD="pushd ~ > /dev/null"
-MYPOPD="popd > /dev/null"
-alias  getrcupdate="$MYPSHD; $GETARC; mv .bash_profile .bash_profile-old; mv .vimrc .vimrc-old; mv .bash_logout .bash_logout-old; zextract $ARCFILE; rm $ARCFILE; reload; $MYPOPD"
-alias checkversion="$MYPSHD; $GETVER; echo Current version is \$(cat $VERFILE), you have version $VERSION; rm $VERFILE; $MYPOPD"
-alias makercupdate="$MYPSHD; zcreate $ARCFILE .bash_profile .bash_logout .vimrc .vim; scp $ARCFILE wadny@wadny.phpwebhosting.com:~/www/misc/$ARCFILE; rm $ARCFILE; resetversion; $MYPOPD"
-alias resetversion="$MYPSHD; reload; echo $VERSION > $VERFILE; scp $VERFILE wadny@wadny.phpwebhosting.com:~/www/misc/$VERFILE; rm $VERFILE; $MYPOPD"
 
 ### Set up environment ###
 # Some of these actually break Unicode support, hopefully they are no longer needed?
@@ -138,11 +118,11 @@ bind "set show-all-if-ambiguous on" # display matches for ambiguous patterns on 
 umask 022
 
 if `which dircolors > /dev/null 2>&1`; then
-	eval "`dircolors -b`"
+   eval "`dircolors -b`"
 fi
 if `which mesg > /dev/null 2>&1`; then
    if [ -t 0 ]; then # verify stdin is a tty to avoid error messages via ssh
-   	mesg n
+      mesg n
    fi
 fi
 
@@ -179,14 +159,14 @@ esac
 
 ### Select the right date display method to use ###
 if [ ${BASH_VERSINFO[0]} -lt 3 ]; then
-	export PS1="$TITLEBAR$GREENBG$ARROW \u$WHITE@$GREENBG\h $GREENFG$ARROW$YELLOWBG \w $YELLOWFG$ARROW$BLUEBG \$(date +\"%Y-%m-%d %H:%M:%S\") $ARROW$NORMAL\n\!$WHITE\\$ $NORMAL"
+   export PS1="$TITLEBAR$GREENBG$ARROW \u$WHITE@$GREENBG\h $GREENFG$ARROW$YELLOWBG \w $YELLOWFG$ARROW$BLUEBG \$(date +\"%Y-%m-%d %H:%M:%S\") $ARROW$NORMAL\n\!$WHITE\\$ $NORMAL"
 else
    export PS1="$TITLEBAR$GREENBG$ARROW \u$WHITE@$GREENBG\h\$([[ \$(jobs -l | wc -l) -gt 0 ]] && echo $JOBS) $GREENFG$ARROW$YELLOWBG \w $YELLOWFG$ARROW$BLUEBG \D{%Y-%m-%d %H:%M:%S} $ARROW$NORMAL\n\!$WHITE\\$ $NORMAL"
 fi
 
 ### Load any custom-defined user settings ###
 if [ -f ~/.bashrc.local ]; then
-	source ~/.bashrc.local
+   source ~/.bashrc.local
 fi
 
 # Alias definitions.
@@ -194,18 +174,18 @@ fi
 # ~/.bash_aliases, instead of adding them here directly.
 # See /usr/share/doc/bash-doc/examples in the bash-doc package.
 if [ -f ~/.bash_aliases ]; then
-    . ~/.bash_aliases
+   . ~/.bash_aliases
 fi
 
 # enable programmable completion features (you don't need to enable
 # this, if it's already enabled in /etc/bash.bashrc and /etc/profile
 # sources /etc/bash.bashrc).
 if ! shopt -oq posix; then
-  if [ -f /usr/share/bash-completion/bash_completion ]; then
-    . /usr/share/bash-completion/bash_completion
-  elif [ -f /etc/bash_completion ]; then
-    . /etc/bash_completion
-  fi
+   if [ -f /usr/share/bash-completion/bash_completion ]; then
+      . /usr/share/bash-completion/bash_completion
+   elif [ -f /etc/bash_completion ]; then
+      . /etc/bash_completion
+   fi
 fi
 
 # Add in homeshick for dotfiles management

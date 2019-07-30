@@ -88,12 +88,6 @@ alias reload="source ~/.bashrc"
 alias stack="dirs -l"
 
 ### Set up environment ###
-# Some of these actually break Unicode support, hopefully they are no longer needed?
-#export LESSCHARSET="latin1"
-#export LESS="-R"
-#export CHARSET="UTF-8"
-#export LC_CTYPE="en_US.utf8"
-#export LC_COLLATE="en_US.utf8"
 export EDITOR="vim"
 export CVS_RSH="ssh"
 export HISTCONTROL="erasedups:ignoreboth" # don't put duplicate lines or lines starting with space in history

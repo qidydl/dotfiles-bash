@@ -5,7 +5,6 @@
 # on certain machines.
 #
 # Some things obtained from https://github.com/mrzool/bash-sensible
-#
 
 # If not running interactively, don't do anything
 case $- in
@@ -109,11 +108,15 @@ bind "set completion-ignore-case on" # perform file completion case-insensitive
 bind "set completion-map-case on" # treat hyphens and underscores as equivalent
 bind "set show-all-if-ambiguous on" # display matches for ambiguous patterns on first tab press
 
+# Set the default permissions for new files
 umask 022
 
+# Set the LS_COLORS environment variable
 if `which dircolors > /dev/null 2>&1`; then
    eval "`dircolors -b`"
 fi
+
+# Don't allow messages from other users
 if `which mesg > /dev/null 2>&1`; then
    if [ -t 0 ]; then # verify stdin is a tty to avoid error messages via ssh
       mesg n
@@ -123,8 +126,15 @@ fi
 # make less more friendly for non-text input files, see lesspipe(1)
 [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
 
-if [ -r /etc/bash_completion ]; then
-   . /etc/bash_completion
+# enable programmable completion features (you don't need to enable
+# this, if it's already enabled in /etc/bash.bashrc and /etc/profile
+# sources /etc/bash.bashrc).
+if ! shopt -oq posix; then
+   if [ -f /usr/share/bash-completion/bash_completion ]; then
+      . /usr/share/bash-completion/bash_completion
+   elif [ -f /etc/bash_completion ]; then
+      . /etc/bash_completion
+   fi
 fi
 
 ### Set up prompt ###
@@ -160,7 +170,7 @@ fi
 
 ### Load any custom-defined user settings ###
 if [ -f ~/.bashrc.local ]; then
-   source ~/.bashrc.local
+   . ~/.bashrc.local
 fi
 
 # Alias definitions.
@@ -171,18 +181,10 @@ if [ -f ~/.bash_aliases ]; then
    . ~/.bash_aliases
 fi
 
-# enable programmable completion features (you don't need to enable
-# this, if it's already enabled in /etc/bash.bashrc and /etc/profile
-# sources /etc/bash.bashrc).
-if ! shopt -oq posix; then
-   if [ -f /usr/share/bash-completion/bash_completion ]; then
-      . /usr/share/bash-completion/bash_completion
-   elif [ -f /etc/bash_completion ]; then
-      . /etc/bash_completion
-   fi
+# Homeshick support, if present
+if [ -d ~/.homesick/repos/homeshick ]; then
+   # Add in homeshick for dotfiles management
+   . ~/.homesick/repos/homeshick/homeshick.sh
+   # Also include command completion for homeshick
+   . ~/.homesick/repos/homeshick/completions/homeshick-completion.bash
 fi
-
-# Add in homeshick for dotfiles management
-source "$HOME/.homesick/repos/homeshick/homeshick.sh"
-# Also include command completion for homeshick
-source "$HOME/.homesick/repos/homeshick/completions/homeshick-completion.bash"

@@ -27,6 +27,16 @@ if [ "$OSNAME" == "SunOS" ]; then
    export LD_LIBRARY_PATH="/usr/local/gnu/lib:$LD_LIBRARY_PATH" # Fix python
 fi
 
+# set PATH so it includes user's private bin if it exists
+if [ -d "$HOME/bin" ] ; then
+   PATH="$HOME/bin:$PATH"
+fi
+
+# set PATH so it includes user's private bin if it exists
+if [ -d "$HOME/.local/bin" ] ; then
+   PATH="$HOME/.local/bin:$PATH"
+fi
+
 ### Set up aliases ###
 case "$OSNAME" in
    "Linux" )

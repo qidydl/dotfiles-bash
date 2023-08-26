@@ -106,10 +106,11 @@ export HISTSIZE="1000" # larger history size
 export HISTFILESIZE="4096" # larget history size
 export PROMPT_COMMAND="history -a" # record each line to history as it gets issues
 
+shopt -s cdspell # correct spelling errors in arguments to cd
+shopt -s checkhash # re-check PATH if command not found in command hash
+shopt -s checkwinsize # updated window size after every command
 shopt -s cmdhist # enable multiline historization as a single line
 shopt -s histappend # append to the history file, don't overwrite it
-shopt -s checkwinsize # updated window size after every command
-shopt -s cdspell # correct spelling errors in arguments to cd
 if [ ${BASH_VERSINFO[0]} -ge 4 ]; then
    shopt -s dirspell # correct spelling errors during tab-completion
 fi
